@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Joe's Estimation Station</title>
+  <!-- SEO & Social Metadata -->
+  <meta name="description" content="Joe's Estimation Station - Compare and optimize your device purchases across top vendors.">
+  <meta name="keywords" content="estimation, pricing, devices, vendor comparison, Joe's Estimation Station">
+  <link rel="canonical" href="https://example.com/">
+  <meta property="og:title" content="Joe's Estimation Station">
+  <meta property="og:description" content="Compare and optimize your device purchases across top vendors.">
+  <meta property="og:image" content="https://source.unsplash.com/1600x900/?technology">
+  <meta property="og:url" content="https://example.com/">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <!-- Tailwind CSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.2.7/dist/tailwind.min.css" rel="stylesheet" />
+  <!-- Google Fonts for a premium look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Using "Inter" font for a modern look -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Base Styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #2d3748, #4a5568);
+      color: #e2e8f0;
+      transition: background 0.3s, color 0.3s;
+    }
+    /* Light Mode Overrides */
+    body.light-mode {
+      background: #f7fafc;
+      color: #2d3748;
+    }
+    body.light-mode .card {
+      background: #fff;
+      color: #2d3748;
+    }
+    body.light-mode nav, 
+    body.light-mode .hero::before {
+      background: #e2e8f0;
+    }
+    /* Custom container */
+    .container-custom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    /* Card style for dark mode */
+    .card {
+      background: #2d3748;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      padding: 2rem;
+    }
+    /* Navbar styling */
+    nav .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav {
+      background: #2d3748;
+    }
+    nav a {
+      color: #e2e8f0;
+    }
+    /* Hero Section with background image and overlay */
+    .hero {
+      position: relative;
+      background: url('https://source.unsplash.com/1600x900/?technology') center/cover no-repeat;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-bottom: 4px solid #4a5568;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      color: #e2e8f0;
+    }
+    .hero h1 {
+      font-size: 3rem;
+    }
+    /* Fade-in animation for results */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+    /* Slide toggle for breakdown rows */
+    .slide-toggle {
+      transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+      overflow: hidden;
+    }
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #4a5568;
+      padding: 1rem;
+      text-align: left;
+    }
+    th {
+      background: #4a5568;
+      color: #e2e8f0;
+    }
+    td {
+      background: #2d3748;
+      color: #e2e8f0;
+    }
+    a {
+      color: #63b3ed;
+    }
+    /* Back to Top Button */
+    #backToTop {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: #4a5568;
+      color: #e2e8f0;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      transition: background 0.3s;
+      display: none;
+      z-index: 100;
+    }
+    #backToTop:hover {
+      background: #2d3748;
+    }
+  </style>
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Joe's Estimation Station",
+    "url": "https://example.com/",
+    "description": "Compare and optimize your device purchases across top vendors.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Joe's Estimation Station"
+    }
+  }
+  </script>
+</head>
+<body class="min-h-screen">
+  <!-- Navbar -->
+  <nav class="sticky top-0 shadow-md z-50" aria-label="Main Navigation">
+    <div class="container-custom nav-container py-4">
+      <div class="text-2xl font-extrabold">Joe's Estimation Station</div>
+      <div class="space-x-6 flex items-center">
+        <a href="#" class="hover:text-blue-400 font-medium transition-colors" aria-label="Home">Home</a>
+        <a href="#" class="hover:text-blue-400 font-medium transition-colors" aria-label="Contact">Contact</a>
+        <button id="themeToggle" aria-label="Toggle Light/Dark Mode" class="ml-4 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-1 px-3 rounded transition-colors">
+          Toggle Theme
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero" role="banner">
+    <div class="hero-content container-custom">
+      <h1 class="font-extrabold mb-4">Smarter Multi-Item Purchasing</h1>
+      <p class="text-xl mb-6 max-w-2xl mx-auto">
+        Compare and optimize your device purchases across top vendors.
+        Add all the items you need, then let us do the rest!
+      </p>
+      <a href="#devices" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition-colors" aria-label="Get Started">
+        Get Started
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container-custom my-12">
+    <!-- Devices Section -->
+    <section id="devices" class="card mb-12" aria-labelledby="devicesHeading">
+      <h2 id="devicesHeading" class="text-3xl font-bold text-center mb-6">Your Devices</h2>
+      <p class="text-center text-gray-400 mb-8">
+        Add each item and quantity needed. When ready, click <span class="font-semibold">Search</span> to see your combined totals.
+      </p>
+      <div id="devicesContainer" class="mx-auto max-w-2xl">
+        <div id="deviceRowsWrapper" class="space-y-4"></div>
+        <div class="flex justify-center space-x-4 mt-6">
+          <button 
+            id="addDeviceBtn" 
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors"
+            aria-label="Add Another Device"
+          >
+            + Add Another Device
+          </button>
+          <button 
+            id="resetBtn" 
+            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors"
+            aria-label="Reset Devices and Results"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="card mb-12" aria-labelledby="resultsHeading">
+      <div class="text-center mb-8">
+        <button 
+          id="searchBtn" 
+          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-colors"
+          aria-label="Search for Best Prices"
+        >
+          Search
+        </button>
+      </div>
+      <!-- Loading Spinner -->
+      <div id="loadingSpinner" class="hidden flex justify-center items-center mb-6">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-200"></div>
+      </div>
+      <div id="resultsContainer" class="hidden fade-in">
+        <!-- Overall Lowest Price Highlight -->
+        <div id="lowestPriceContainer" class="p-6 mb-8 border-l-4 border-green-500 bg-green-900 rounded shadow"></div>
+        
+        <!-- Cheapest Per Device List with Total -->
+        <div id="cheapestListContainer" class="p-6 mb-8 border-l-4 border-yellow-500 bg-yellow-900 rounded shadow"></div>
+
+        <!-- All Vendors Table -->
+        <h2 class="text-3xl font-bold text-center mb-6">All Vendor Totals</h2>
+        <div class="overflow-x-auto mb-12">
+          <table>
+            <thead>
+              <tr>
+                <th>Vendor</th>
+                <th>Total Cost</th>
+                <th>Link</th>
+                <th>Breakdown</th>
+                <th>Cheapest Devices</th>
+              </tr>
+            </thead>
+            <tbody id="vendorsTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Cheapest Per Device Table -->
+        <h2 class="text-3xl font-bold text-center mb-6">Cheapest Options per Device</h2>
+        <div class="overflow-x-auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Device</th>
+                <th>Cheapest Price</th>
+                <th>Vendor</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody id="cheapestPerDeviceBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" aria-label="Back to Top">↑ Top</button>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 border-t border-gray-700 mt-16 py-6">
+    <div class="container-custom flex flex-col md:flex-row justify-between items-center text-gray-400">
+      <p class="text-sm">&copy; 2025 Joe's Estimation Station. All rights reserved.</p>
+      <div class="space-x-4 mt-4 md:mt-0">
+        <a href="#" class="hover:text-gray-200 transition-colors text-sm" aria-label="Privacy Policy">Privacy</a>
+        <a href="#" class="hover:text-gray-200 transition-colors text-sm" aria-label="Terms and Conditions">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    /********************************************************
+     *         Global / Utility Code / Data
+     ********************************************************/
+    const DEVICE_BASE_PRICES = {
+      'HDMI Cable':          10.00,
+      'Surge Protector':     25.00,
+      'TV Mount':            45.00,
+      'Tilting TV Mount':    65.00,
+      '24-Port PoE Switch':  299.00,
+    };
+
+    const VENDOR_SOURCES = [
+      { name: 'Amazon' },
+      { name: 'eBay' },
+      { name: 'BestBuy' },
+      { name: 'Walmart' },
+      { name: 'Newegg' },
+    ];
+
+    /**
+     * Generates a random price near the base price (±8% to ±12%).
+     */
+    function generateRandomPrice(basePrice) {
+      const minPct = -8;
+      const maxPct = 12;
+      const randomPct = Math.random() * (maxPct - minPct) + minPct;
+      const finalPrice = basePrice * (1 + randomPct / 100);
+      return parseFloat(finalPrice.toFixed(2));
+    }
+
+    /**
+     * Builds a vendor search link for the given query.
+     */
+    function buildVendorLink(vendorName, query) {
+      return `https://www.${vendorName.toLowerCase()}.com/search?q=${encodeURIComponent(query)}`;
+    }
+
+    /********************************************************
+     *            Dynamic Rows for Device Selection
+     ********************************************************/
+    const deviceRowsWrapper = document.getElementById('deviceRowsWrapper');
+    const addDeviceBtn = document.getElementById('addDeviceBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    let deviceRowCount = 0;
+
+    function addDeviceRow() {
+      deviceRowCount++;
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-4';
+      rowDiv.dataset.rowId = deviceRowCount;
+
+      const selectEl = document.createElement('select');
+      selectEl.className = 'border border-gray-600 rounded p-2 w-52 focus:ring-2 focus:ring-blue-400 bg-gray-700 text-gray-100';
+      selectEl.setAttribute('aria-label', 'Select Device');
+      selectEl.innerHTML = `
+        <option value="">-- Choose a Device --</option>
+        ${Object.keys(DEVICE_BASE_PRICES).map(name => `<option value="${name}">${name}</option>`).join('')}
+      `;
+
+      const quantityInput = document.createElement('input');
+      quantityInput.type = 'number';
+      quantityInput.min = '1';
+      quantityInput.placeholder = 'Quantity';
+      quantityInput.className = 'border border-gray-600 rounded p-2 w-24 focus:ring-2 focus:ring-blue-400 bg-gray-700 text-gray-100';
+      quantityInput.setAttribute('aria-label', 'Device Quantity');
+
+      const removeBtn = document.createElement('button');
+      removeBtn.innerText = 'Remove';
+      removeBtn.className = 'bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors';
+      removeBtn.setAttribute('aria-label', 'Remove Device');
+      removeBtn.addEventListener('click', () => {
+        deviceRowsWrapper.removeChild(rowDiv);
+      });
+
+      rowDiv.append(selectEl, quantityInput, removeBtn);
+      deviceRowsWrapper.appendChild(rowDiv);
+    }
+
+    // Start with one device row
+    addDeviceRow();
+    addDeviceBtn.addEventListener('click', addDeviceRow);
+
+    // Reset functionality to clear all devices and results
+    resetBtn.addEventListener('click', () => {
+      deviceRowsWrapper.innerHTML = '';
+      addDeviceRow();
+      document.getElementById('resultsContainer').classList.add('hidden');
+    });
+
+    /********************************************************
+     *              Search / Calculation Logic
+     ********************************************************/
+    const searchBtn = document.getElementById('searchBtn');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const lowestPriceContainer = document.getElementById('lowestPriceContainer');
+    const vendorsTableBody = document.getElementById('vendorsTableBody');
+    const cheapestPerDeviceBody = document.getElementById('cheapestPerDeviceBody');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+
+    searchBtn.addEventListener('click', () => {
+      // Show loading spinner
+      loadingSpinner.classList.remove('hidden');
+
+      // Collect device entries
+      const deviceRows = Array.from(deviceRowsWrapper.children);
+      if (deviceRows.length === 0) {
+        alert('Please add at least one device.');
+        loadingSpinner.classList.add('hidden');
+        return;
+      }
+
+      const userDevices = [];
+      for (let row of deviceRows) {
+        const selectEl = row.querySelector('select');
+        const quantityInput = row.querySelector('input[type="number"]');
+        const deviceName = selectEl.value.trim();
+        const quantity = parseInt(quantityInput.value, 10);
+
+        if (!deviceName || !DEVICE_BASE_PRICES[deviceName] || quantity <= 0) {
+          alert('Please select a valid device and quantity.');
+          loadingSpinner.classList.add('hidden');
+          return;
+        }
+        userDevices.push({ deviceName, quantity });
+      }
+
+      // For each vendor, compute total & breakdown
+      const vendorResults = VENDOR_SOURCES.map(vendor => {
+        let totalCost = 0;
+        const breakdown = [];
+
+        userDevices.forEach(item => {
+          const basePrice = DEVICE_BASE_PRICES[item.deviceName];
+          const randomUnitPrice = generateRandomPrice(basePrice);
+          const itemTotal = randomUnitPrice * item.quantity;
+          breakdown.push({
+            deviceName: item.deviceName,
+            quantity: item.quantity,
+            unitPrice: randomUnitPrice,
+            total: parseFloat(itemTotal.toFixed(2))
+          });
+          totalCost += itemTotal;
+        });
+
+        return {
+          vendorName: vendor.name,
+          totalCost: parseFloat(totalCost.toFixed(2)),
+          breakdown,
+          link: buildVendorLink(vendor.name, userDevices.map(d => d.deviceName).join(' '))
+        };
+      });
+
+      // Find the overall lowest vendor by combined total
+      let lowestVendor = vendorResults[0];
+      vendorResults.forEach(vendor => {
+        if (vendor.totalCost < lowestVendor.totalCost) {
+          lowestVendor = vendor;
+        }
+      });
+
+      // Compute cheapest per device across all vendors
+      const cheapestPerDevice = {};
+      userDevices.forEach(device => {
+        cheapestPerDevice[device.deviceName] = {
+          vendor: null,
+          unitPrice: Infinity,
+          link: ''
+        };
+      });
+      vendorResults.forEach(vendor => {
+        vendor.breakdown.forEach(item => {
+          if (item.unitPrice < cheapestPerDevice[item.deviceName].unitPrice) {
+            cheapestPerDevice[item.deviceName] = {
+              vendor: vendor.vendorName,
+              unitPrice: item.unitPrice,
+              link: buildVendorLink(vendor.vendorName, item.deviceName)
+            };
+          }
+        });
+      });
+
+      // Calculate overall total cheapest cost (cheapest unit price * quantity for each device)
+      let totalCheapestCost = 0;
+      userDevices.forEach(item => {
+        totalCheapestCost += cheapestPerDevice[item.deviceName].unitPrice * item.quantity;
+      });
+
+      // Hide loading spinner and show results container
+      loadingSpinner.classList.add('hidden');
+      resultsContainer.classList.remove('hidden');
+      resultsContainer.classList.add('fade-in');
+
+      // Render the overall lowest price highlight
+      renderLowestPriceBreakdown(lowestVendor);
+
+      // Render the Cheapest Per Device List along with the overall total
+      renderCheapestList(cheapestPerDevice, totalCheapestCost);
+
+      // Render the vendor table with an extra column for cheapest devices in that vendor (if applicable)
+      vendorsTableBody.innerHTML = '';
+      vendorResults.forEach((result, idx) => {
+        // Determine cheapest devices for this vendor (devices where this vendor is the cheapest option)
+        const cheapestDevices = result.breakdown.filter(item => {
+          return cheapestPerDevice[item.deviceName].vendor === result.vendorName;
+        });
+        let cheapestDevicesHtml = cheapestDevices.map(item => {
+          return `<div class="mb-1">
+                    <span class="font-semibold">${item.deviceName}:</span> $${item.unitPrice.toFixed(2)} 
+                    <a href="${buildVendorLink(result.vendorName, item.deviceName)}" target="_blank" class="text-blue-400 hover:underline">Buy</a>
+                  </div>`;
+        }).join('');
+        if (!cheapestDevicesHtml) cheapestDevicesHtml = '—';
+
+        // Main row
+        const mainRow = document.createElement('tr');
+        mainRow.className = 'hover:bg-gray-700 transition-colors';
+        mainRow.innerHTML = `
+          <td class="px-4 py-3 font-semibold">${result.vendorName}</td>
+          <td class="px-4 py-3">$${result.totalCost.toFixed(2)}</td>
+          <td class="px-4 py-3">
+            <a href="${result.link}" target="_blank" class="text-blue-400 hover:underline">Search</a>
+          </td>
+          <td class="px-4 py-3">
+            <button class="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-1 px-3 rounded breakdown-toggle" data-breakdown-index="${idx}" aria-label="Toggle Breakdown">
+              View
+            </button>
+          </td>
+          <td class="px-4 py-3">${cheapestDevicesHtml}</td>
+        `;
+
+        // Breakdown row (hidden initially)
+        const breakdownRow = document.createElement('tr');
+        breakdownRow.className = 'hidden slide-toggle';
+        breakdownRow.id = `breakdownRow-${idx}`;
+        let breakdownHtml = `
+          <table class="min-w-full text-sm">
+            <thead class="bg-gray-700">
+              <tr>
+                <th class="px-2 py-1">Device</th>
+                <th class="px-2 py-1">Qty</th>
+                <th class="px-2 py-1">Unit Price</th>
+                <th class="px-2 py-1">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        result.breakdown.forEach(item => {
+          breakdownHtml += `
+            <tr>
+              <td class="px-2 py-1">${item.deviceName}</td>
+              <td class="px-2 py-1">${item.quantity}</td>
+              <td class="px-2 py-1">$${item.unitPrice.toFixed(2)}</td>
+              <td class="px-2 py-1">$${item.total.toFixed(2)}</td>
+            </tr>
+          `;
+        });
+        breakdownHtml += `
+            </tbody>
+          </table>
+        `;
+        breakdownRow.innerHTML = `<td colspan="5" class="px-4 py-3">${breakdownHtml}</td>`;
+
+        vendorsTableBody.append(mainRow, breakdownRow);
+      });
+
+      // Render the Cheapest Per Device Table
+      cheapestPerDeviceBody.innerHTML = '';
+      Object.keys(cheapestPerDevice).forEach(deviceName => {
+        const option = cheapestPerDevice[deviceName];
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="px-4 py-3">${deviceName}</td>
+          <td class="px-4 py-3">$${option.unitPrice.toFixed(2)}</td>
+          <td class="px-4 py-3">${option.vendor}</td>
+          <td class="px-4 py-3">
+            <a href="${option.link}" target="_blank" class="text-blue-400 hover:underline">View</a>
+          </td>
+        `;
+        cheapestPerDeviceBody.appendChild(row);
+      });
+
+      // Use event delegation for breakdown toggles
+      document.querySelectorAll('.breakdown-toggle').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.getAttribute('data-breakdown-index');
+          const row = document.getElementById(`breakdownRow-${index}`);
+          if (row.classList.contains('hidden')) {
+            row.classList.remove('hidden');
+            e.target.textContent = 'Hide';
+          } else {
+            row.classList.add('hidden');
+            e.target.textContent = 'View';
+          }
+        });
+      });
+    });
+
+    /**
+     * Renders the overall lowest price highlight.
+     */
+    function renderLowestPriceBreakdown(lowestVendor) {
+      let breakdownRows = '';
+      lowestVendor.breakdown.forEach(item => {
+        breakdownRows += `
+          <tr>
+            <td class="px-3 py-2">${item.deviceName}</td>
+            <td class="px-3 py-2">${item.quantity}</td>
+            <td class="px-3 py-2">$${item.unitPrice.toFixed(2)}</td>
+            <td class="px-3 py-2">$${item.total.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+
+      const breakdownTable = `
+        <table class="min-w-full text-sm mb-4">
+          <thead class="bg-green-700">
+            <tr>
+              <th class="px-3 py-2">Device</th>
+              <th class="px-3 py-2">Qty</th>
+              <th class="px-3 py-2">Unit Price</th>
+              <th class="px-3 py-2">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>${breakdownRows}</tbody>
+        </table>
+      `;
+
+      lowestPriceContainer.innerHTML = `
+        <h3 class="text-2xl font-bold text-center mb-3">
+          Overall Lowest Combined Price: <span class="text-green-400">${lowestVendor.vendorName}</span>
+        </h3>
+        <p class="text-center mb-4">
+          Total for all devices: <strong class="text-green-400">$${lowestVendor.totalCost.toFixed(2)}</strong>
+        </p>
+        ${breakdownTable}
+        <div class="text-center">
+          <a href="${lowestVendor.link}" target="_blank" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full transition-colors">
+            View on ${lowestVendor.vendorName}
+          </a>
+        </div>
+      `;
+    }
+
+    /**
+     * Renders a list section that displays the cheapest price for each device (across all vendors)
+     * along with the overall total cheapest price for all devices.
+     */
+    function renderCheapestList(cheapestPerDevice, totalCheapestCost) {
+      const container = document.getElementById('cheapestListContainer');
+      let listHtml = '<h3 class="text-2xl font-bold mb-3">Cheapest Price per Device (All Sources)</h3>';
+      listHtml += '<ul class="list-disc pl-5 space-y-2">';
+      for (const device in cheapestPerDevice) {
+        const option = cheapestPerDevice[device];
+        listHtml += `<li>
+          <span class="font-semibold">${device}</span>: $${option.unitPrice.toFixed(2)} from ${option.vendor} 
+          <a href="${option.link}" target="_blank" class="text-blue-400 hover:underline">Buy</a>
+        </li>`;
+      }
+      listHtml += '</ul>';
+      listHtml += `<p class="mt-4 font-bold">Total Cheapest Price (All Devices): $${totalCheapestCost.toFixed(2)}</p>`;
+      container.innerHTML = listHtml;
+    }
+
+    /********************************************************
+     *                Theme Toggle & Back to Top
+     ********************************************************/
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+    });
+
+    // Back to Top Button
+    const backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = 'block';
+      } else {
+        backToTopBtn.style.display = 'none';
+      }
+    });
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
